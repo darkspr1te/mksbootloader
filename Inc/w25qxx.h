@@ -1,7 +1,7 @@
 #ifndef _W25QXX_H_
 #define _W25QXX_H_
 
-#include "spi.h"
+#include "spi_ic.h"
 
 #define CMD_WRITE_ENABLE   0x06
 #define CMD_WRITE_DISABLE  0x04

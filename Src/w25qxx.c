@@ -1,9 +1,9 @@
 #include "w25qxx.h"
 //#include "variants.h"
-#include "spi.h"
+#include "spi_ic.h"
 #include "boot_conf.h"
 /*************************** W25Qxx SPI ģʽ�ײ���ֲ�Ľӿ� ***************************/
-#define W25Qxx_SPI     SPI1
+#define W25Qxx_SPI     _SPI1
 #define W25Qxx_SPEED   0
  
 //HAL_GPIO_WritePin(FLASH_nCS_GPIO_Port, FLASH_nCS_Pin, GPIO_PIN_SET);

@@ -62,7 +62,7 @@ FRESULT readNextPage(uint8_t *target, uint32_t *read)
 HAL_StatusTypeDef flashWrite(uint32_t position, uint8_t *data, uint32_t size)
 {
 	#ifdef DEBUG	
-		printf("write page %#010x\n\r",position);
+		//printf("write page %#010x\n\r",position);
 		#endif
 	HAL_StatusTypeDef res = HAL_OK;
 	for (uint32_t i=0; i<size; i+=2)
@@ -73,6 +73,29 @@ HAL_StatusTypeDef flashWrite(uint32_t position, uint8_t *data, uint32_t size)
 			break;
 	}
 	return res;
+}
+
+void drawProgressbar(int x,int y, int width,int height, int progress)
+{
+	int gap =5;
+   progress = progress > 100 ? 100 : progress; // set the progress value to 100
+   progress = progress < 0 ? 0 :progress; // start the counting to 0-100
+   float bar = ((float)(width-1) / 100) * progress;
+   	//prog=((position-(uint32_t)mcuFirstPageAddr)*100/info.fsize);
+   //int bar =((width-1)*100/progress);
+   //GUI_DrawRect(10,10,(320-10),(240-10));
+  // GUI_FillRectColor(x,y,width,height,RED);
+   GUI_SetColor(GREEN);
+   GUI_DrawRect(x, y, width , height);
+   if (bar<width-gap)
+   	GUI_FillRectColor(x+gap,y+gap,bar,height-gap,RED);
+	else
+	GUI_FillRectColor(x+gap,y+gap,bar-gap,height-gap,RED);
+   //sample GUI_DrawRect(10,10,(320-10),(240-10));
+   printf("bar %d\n\r",progress);
+   //display.drawRect(x, y, width, height, WHITE);
+   //display.fillRect(x+2, y+2, bar , height-4, WHITE); // initailize the graphics fillRect(int x, int y, int width, int height)
+  
 }
 
 FlashResult flash(const char *fname)
@@ -114,14 +137,22 @@ if (res == FR_OK)
 #endif
 		return FLASH_RESULT_FLASH_ERROR;
 	}
-
+	uint32_t total=(uint32_t)mcuFirstPageAddr-0x8000000;
+	int size = f_size(&fil);
+	int prog=0;
 	do {
 		readNextPage(buffer, &bufferLen);
+
+		//void drawProgressbar(int x,int y, int width,int height, int progress)
 		
 		if (HAL_OK != flashWrite(position, buffer, bufferLen))
 			return FLASH_RESULT_FLASH_ERROR;
-
-		position += bufferLen;
+		position += bufferLen;	
+		prog=((position-(uint32_t)mcuFirstPageAddr)*100/info.fsize);
+		//printf("write page %#010x\n\r",position);
+		printf("position %#010x\n\r",position);
+		printf("prog %d %d\n\r",prog, info.fsize);
+		drawProgressbar(30,40, 300,80,prog);
 	} while (bufferLen != 0);
 
 	f_close(&fil);

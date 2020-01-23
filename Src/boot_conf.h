@@ -67,6 +67,9 @@
   
 #define selecticonw 70
 #define ROOT_DIR			"MKS"
+#define SPI1_CS_PIN PB9
+#include "spiflash_w25q16dv.h"
+
 #endif
 
 /**
@@ -75,7 +78,7 @@
  *  Bootloader will write firmware to flash each boot if file not rename after update
  *  define only for testing purpose, remove define in release builds 
  */
-//#define DONT_RENAME
+#define DONT_RENAME
 
 
 

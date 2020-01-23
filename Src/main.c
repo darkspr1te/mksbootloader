@@ -32,6 +32,7 @@
 #include <string.h>
 #include "LCD_Init.h"
 
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,12 +111,13 @@ int main(void)
   /* Start System - start output*/
   LCD_Init();
   LCD_RefreshDirection(1);
+  //W25Qxx_Init();
   
   GUI_Clear(BLACK);
 
-  GUI_DrawRect(10,10,(320-10),(240-10));
-  //while(1);
-  GUI_DispString(100, 5, (u8*)"Icon Updating...!");
+  //GUI_DrawRect(10,10,(320-10),(240-10));
+ 
+  //GUI_DispString(100, 5, (u8*)"Icon Updating...!");
   
   //updateIcon();
   #ifdef DEBUG
@@ -131,7 +133,7 @@ int main(void)
   printf("looking for \"%s\" on sdcard\r\n",FIRMWARE);
   #endif
     
-//  while(1);
+
   unsigned char result;
   result = f_mount(&sdFileSystem, SPISD_Path, 1);
 
@@ -170,7 +172,7 @@ int main(void)
       #endif
       //We flashed a new firmware app now lets jump to it's vectors at addres stored in MAIN_PR_OFFSET(boot_conf.h)
       ErrorBeep(3);
-    // Jump_To_App();
+     Jump_To_App();
   }
 
   
@@ -178,7 +180,7 @@ int main(void)
   {
     
     //Assume theres a app there to boot too
-    //Jump_To_App();
+    Jump_To_App();
     
     #ifdef DEBUG
     printf("app failed to boot at %#010x\n\r",MAIN_PR_OFFSET);

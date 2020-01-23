@@ -1,5 +1,5 @@
 #include "GUI.h"
-//#include "includes.h"
+
 #include "lcd.h"
 #include "LCD_Init.h"
 
@@ -107,7 +107,8 @@ void GUI_DrawPoint(uint16_t x, uint16_t y)
 {	   
   LCD_SetWindow(x, y, x, y);			 	 
   LCD_WR_REG(0x2C);
-  LCD_WR_16BITS_DATA(foreGroundColor);	
+  LCD_WR_DATA(foreGroundColor);
+  //LCD_WR_16BITS_DATA(foreGroundColor);	
 }
 
 void GUI_FillRect(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
@@ -119,7 +120,8 @@ void GUI_FillRect(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
   {
     for(j=sy; j<ey; j++)
     {
-      LCD_WR_16BITS_DATA(foreGroundColor);
+      LCD_WR_DATA(foreGroundColor);
+      //LCD_WR_16BITS_DATA(foreGroundColor);
     }
   }
 }
@@ -138,7 +140,8 @@ void GUI_ClearRect(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey)
   {
     for(j=sy; j<ey; j++)
     {
-      LCD_WR_16BITS_DATA(backGroundColor);
+      LCD_WR_DATA(foreGroundColor);
+      //LCD_WR_16BITS_DATA(backGroundColor);
     }
   }
 }
@@ -157,7 +160,8 @@ void GUI_FillRectColor(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint1
   {
     for(j=sy; j<ey; j++)
     {
-      LCD_WR_16BITS_DATA(color);
+      LCD_WR_DATA(color);
+      //LCD_WR_16BITS_DATA(color);
     }
   }
 }
@@ -174,7 +178,8 @@ void GUI_FillRectArry(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint8_
       arry++;
       color = (color<<8) | (*arry);
       arry++;
-      LCD_WR_16BITS_DATA(color);
+      LCD_WR_DATA(color);
+      //LCD_WR_16BITS_DATA(color);
     }
   }
 }
@@ -244,7 +249,8 @@ void GUI_HLine(uint16_t x1, uint16_t y, uint16_t x2)
   LCD_WR_REG(0x2C);
   for(i=x1; i<x2; i++)
   {
-    LCD_WR_16BITS_DATA(foreGroundColor);	
+    LCD_WR_DATA(foreGroundColor);
+    //LCD_WR_16BITS_DATA(foreGroundColor);	
   }
 }
 void GUI_VLine(uint16_t x, uint16_t y1, uint16_t y2)
@@ -254,7 +260,8 @@ void GUI_VLine(uint16_t x, uint16_t y1, uint16_t y2)
   LCD_WR_REG(0x2C);
   for(i=y1; i<y2; i++)
   {
-    LCD_WR_16BITS_DATA(foreGroundColor);	
+    LCD_WR_DATA(foreGroundColor);
+    //LCD_WR_16BITS_DATA(foreGroundColor);	
   }
 }
 
@@ -526,7 +533,7 @@ CHAR_INFO GUI_DispOne(int16_t sx, int16_t sy, const uint8_t *p)
   uint8_t  font[bitMapSize];
   uint32_t temp = 0;
 //segfault 
-  //W25Qxx_ReadBuffer(font, info.bitMapAddr, bitMapSize);
+  W25Qxx_ReadBuffer(font, info.bitMapAddr, bitMapSize);
 
   for(x=0; x < info.pixelWidth; x++)
   {           
