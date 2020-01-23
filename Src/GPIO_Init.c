@@ -1,6 +1,6 @@
 #include "GPIO_Init.h"
-#include "boot_conf.h"
-#include "STM32Fxx_Pins.h"
+
+
 
 GPIO_TypeDef* GPIO_Port[] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE};
 

@@ -2,7 +2,6 @@
 //#include "GPIO_Init.h"
 //#include "includes.h"
 
-#include "boot_conf.h"
 
 #ifdef LCD_LED_PIN
 void LCD_LED_On()

@@ -62,8 +62,8 @@ FRESULT readNextPage(uint8_t *target, uint32_t *read)
 HAL_StatusTypeDef flashWrite(uint32_t position, uint8_t *data, uint32_t size)
 {
 	#ifdef DEBUG	
-		//printf("write page %#010x\n\r",position);
-		#endif
+	//printf("write page %#010x\n\r",position);
+	#endif
 	HAL_StatusTypeDef res = HAL_OK;
 	for (uint32_t i=0; i<size; i+=2)
 	{
@@ -74,27 +74,50 @@ HAL_StatusTypeDef flashWrite(uint32_t position, uint8_t *data, uint32_t size)
 	}
 	return res;
 }
+void speccy_border(int progress)
+{
+	//totally for fun, reminder of the ole' days 
+	int top_box = 10;
+	int bottom_box = 10;
+	int side_box = 10;
+	int colour = WHITE;
+	int offset = 0x6b;
+	
+	colour = (colour-(0xff*progress));
+	GUI_SetColor(colour);
+	GUI_FillRectColor(1, 1, side_box, 240,colour);
+	colour=colour-(offset*3);
+   	GUI_FillRectColor(1, 1, 320, top_box,colour);
+	colour=colour-(offset*2);
+	GUI_FillRectColor(320-side_box, 1, 320, 240,colour);
+	colour=colour-(offset*4);
+	GUI_FillRectColor(1, 240-bottom_box, 320, 240,colour);
+	
+}
 
 void drawProgressbar(int x,int y, int width,int height, int progress)
 {
 	int gap =5;
+	uint16_t colour_a,colour_b;
+	colour_a = WHITE;
+	colour_b = 0xfff;
    progress = progress > 100 ? 100 : progress; // set the progress value to 100
    progress = progress < 0 ? 0 :progress; // start the counting to 0-100
+   GUI_SetRange(0,0,320-1,240-1);
+   colour_a = (colour_a-(colour_b*progress));
    float bar = ((float)(width-1) / 100) * progress;
-   	//prog=((position-(uint32_t)mcuFirstPageAddr)*100/info.fsize);
-   //int bar =((width-1)*100/progress);
-   //GUI_DrawRect(10,10,(320-10),(240-10));
-  // GUI_FillRectColor(x,y,width,height,RED);
-   GUI_SetColor(GREEN);
-   GUI_DrawRect(x, y, width , height);
-   if (bar<width-gap)
-   	GUI_FillRectColor(x+gap,y+gap,bar,height-gap,RED);
+   GUI_SetColor(GBLUE);
+   GUI_DrawRect(x, y, width , (y+height));
+	if (bar<width-gap)
+   		GUI_FillRectColor(x+gap,y+gap,bar,(y+height)-gap,colour_a);
 	else
-	GUI_FillRectColor(x+gap,y+gap,bar-gap,height-gap,RED);
-   //sample GUI_DrawRect(10,10,(320-10),(240-10));
-   printf("bar %d\n\r",progress);
-   //display.drawRect(x, y, width, height, WHITE);
-   //display.fillRect(x+2, y+2, bar , height-4, WHITE); // initailize the graphics fillRect(int x, int y, int width, int height)
+		GUI_FillRectColor(x+gap,y+gap,bar-gap,(y+height)-gap,colour_a);
+	
+
+  #ifdef DEBUG
+ // printf("progress bar after calc %d\n\r",progress);
+  #endif
+ 
   
 }
 
@@ -142,23 +165,27 @@ if (res == FR_OK)
 	int prog=0;
 	do {
 		readNextPage(buffer, &bufferLen);
-
-		//void drawProgressbar(int x,int y, int width,int height, int progress)
-		
 		if (HAL_OK != flashWrite(position, buffer, bufferLen))
 			return FLASH_RESULT_FLASH_ERROR;
-		position += bufferLen;	
+		position += bufferLen;
+		#ifdef GFX_UI	
+		//save some cyles if we dont need to calc this 
 		prog=((position-(uint32_t)mcuFirstPageAddr)*100/info.fsize);
-		//printf("write page %#010x\n\r",position);
-		printf("position %#010x\n\r",position);
-		printf("prog %d %d\n\r",prog, info.fsize);
-		drawProgressbar(30,40, 300,80,prog);
+		#endif
+		#ifdef DEBUG	
+	//	printf("position %#010x\n\r",position);
+	//	printf("prog %d %d\n\r",prog, info.fsize);
+		#endif
+		#ifdef GFX_UI
+		drawProgressbar(20,100, 300,20,prog);
+		speccy_border(prog);
+		#endif
 	} while (bufferLen != 0);
 
 	f_close(&fil);
 	HAL_FLASH_Lock();
 #ifdef DEBUG
-	  printf("flash write complete \r\n");
+	 // printf("flash write complete \r\n");
 #endif
 	return FR_OK;
 }

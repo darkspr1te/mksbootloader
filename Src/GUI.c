@@ -1,5 +1,5 @@
 #include "GUI.h"
-
+#include "boot_conf.h"
 #include "lcd.h"
 #include "LCD_Init.h"
 
@@ -100,7 +100,8 @@ void GUI_DrawPixel(int16_t x, int16_t y, uint16_t color)
   
   LCD_SetWindow(x, y, x, y);		 	 
   LCD_WR_REG(0x2C);
-  LCD_WR_16BITS_DATA(color);	
+  LCD_WR_DATA(color);
+  //LCD_WR_16BITS_DATA(color);	
 }
 
 void GUI_DrawPoint(uint16_t x, uint16_t y)
@@ -178,8 +179,9 @@ void GUI_FillRectArry(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint8_
       arry++;
       color = (color<<8) | (*arry);
       arry++;
-      LCD_WR_DATA(color);
-      //LCD_WR_16BITS_DATA(color);
+      //LCD_WR_DATA(color>>8);
+      //LCD_WR_DATA(color&0xff);
+      LCD_WR_16BITS_DATA(color);
     }
   }
 }
@@ -533,7 +535,7 @@ CHAR_INFO GUI_DispOne(int16_t sx, int16_t sy, const uint8_t *p)
   uint8_t  font[bitMapSize];
   uint32_t temp = 0;
 //segfault 
-  W25Qxx_ReadBuffer(font, info.bitMapAddr, bitMapSize);
+ // W25Qxx_ReadBuffer(font, info.bitMapAddr, bitMapSize);
 
   for(x=0; x < info.pixelWidth; x++)
   {           
@@ -541,6 +543,9 @@ CHAR_INFO GUI_DispOne(int16_t sx, int16_t sy, const uint8_t *p)
     {
       temp <<= 8;
       temp |= font[i++];
+      //temp |= byte_ascii_fon[i++];
+      //temp |= BigFont[i++];
+      //temp |= SmallFont[i++];
     }
 
     for(y=0;y < info.pixelHeight;y++)
@@ -564,6 +569,7 @@ void GUI_DispString(int16_t x, int16_t y, const uint8_t *p)
   while(*p)
   {   
     info = GUI_DispOne(x, y, p);
+     printf(" test out %s\n\r",*p);
     x += info.pixelWidth;
     p += info.bytes;
   }

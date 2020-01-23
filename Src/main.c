@@ -32,7 +32,6 @@
 #include <string.h>
 #include "LCD_Init.h"
 
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,7 +90,8 @@ inline void moveVectorTable(uint32_t Offset)
   * @brief  The application entry point.
   * @retval int
   */
-
+#include "inline_font.h"
+#define teststr "TEST"
 int main(void)
 {
  
@@ -109,24 +109,37 @@ int main(void)
   MX_FATFS_Init();
   //ErrorBeep(1);
   /* Start System - start output*/
+  #ifdef GFX_UI
   LCD_Init();
   LCD_RefreshDirection(1);
+
   //W25Qxx_Init();
   
   GUI_Clear(BLACK);
-
-  //GUI_DrawRect(10,10,(320-10),(240-10));
- 
-  //GUI_DispString(100, 5, (u8*)"Icon Updating...!");
+  GUI_SetColor(GBLUE);
+  #endif
   
+  GUI_DrawRect(10,10,(320-10),(240-10));
+  GUI_SetColor(WHITE);
+  GUI_SetBkColor(BLACK);
+  int testmearray[30]={65,66,67,68,69,70,71,72,73,74,75};
+  for (int xb=0;xb<30;xb++){testmearray[xb]=0;}
+  //GUI_DispString(100, 30, (uint8_t*)"ABCD");
+  GUI_SetColor(BROWN);
+  //GUI_DrawCircle((DISPLAY_X/2),(DISPLAY_Y/2),70);
+  //void GUI_FillRectArry(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint8_t *arry)
+  //GUI_FillRectArry(1,1,230,219,(u8)*byte_ascii_fon);
+  GUI_FillRectArry(100,100,16,16,(u8)*testmearray);
   //updateIcon();
+  //UI_DispLenString(20,20,(u8)*"string test",32);
+  
   #ifdef DEBUG
   printf("\n\r\n\r\n\rBooting\n\r");
   printf("Software version: %s\r\n",SOFTWARE_VERSION);
   printf("Board Build: \"%s\"\r\n",HARDWARE);
   printf("Build epoch %d\n\r",LAST_BUILD_TIME);
   #endif
-
+//while(1);
   ErrorBeep(1);
   #ifdef DEBUG
   printf("Mounting Filesystem...\n\r");
@@ -149,7 +162,7 @@ int main(void)
     //ErrorBeep(1);
     #endif
   }
-//while(1);
+
   //Now we look for sdcard file and if found we write it to flash
   if (FR_OK == f_mount(&sdFileSystem, SPISD_Path, 1) && FR_OK == flash(FIRMWARE))
   {
@@ -171,8 +184,9 @@ int main(void)
       #endif
       #endif
       //We flashed a new firmware app now lets jump to it's vectors at addres stored in MAIN_PR_OFFSET(boot_conf.h)
+      //Beep 3 for yeah we flashed ok 
       ErrorBeep(3);
-     Jump_To_App();
+      Jump_To_App();
   }
 
   
@@ -181,7 +195,7 @@ int main(void)
     
     //Assume theres a app there to boot too
     Jump_To_App();
-    
+    //we can run a crc or check for valid reset vectors (guess work) to get to here too
     #ifdef DEBUG
     printf("app failed to boot at %#010x\n\r",MAIN_PR_OFFSET);
     printf("we should not be here!\n\r");

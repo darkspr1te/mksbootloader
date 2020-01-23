@@ -1,6 +1,7 @@
 #ifndef _GPIO_INIT_H_
 #define _GPIO_INIT_H_
 #include "boot_conf.h"
+#include "STM32Fxx_Pins.h"
 //#include "stm32f10x_conf.h"
 //#include "STM32Fxx_Pins.h"
 
