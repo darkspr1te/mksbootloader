@@ -16,31 +16,21 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "fatfs.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
+
+
 #include "boot_conf.h"
 #include <stdio.h>
 #include <string.h>
 #include "LCD_Init.h"
 
-/* USER CODE END Includes */
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-
-/* USER CODE END PTD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
 #if defined(STM32F107xC)
 
 SPI_HandleTypeDef hspi1;	// SD-card
@@ -113,25 +103,22 @@ int main(void)
   LCD_Init();
   LCD_RefreshDirection(1);
 
-  //W25Qxx_Init();
-  
+  W25Qxx_Init();
+
   GUI_Clear(BLACK);
   GUI_SetColor(GBLUE);
+  GUI_DispString(110, 30, (uint8_t*)"Booting");
   #endif
-  
-  GUI_DrawRect(10,10,(320-10),(240-10));
+  //while(1);
+  //GUI_DrawRect(10,10,(320-10),(240-10));
   GUI_SetColor(WHITE);
   GUI_SetBkColor(BLACK);
-  int testmearray[30]={65,66,67,68,69,70,71,72,73,74,75};
-  for (int xb=0;xb<30;xb++){testmearray[xb]=0;}
+  //int testmearray[30]={65,66,67,68,69,70,71,72,73,74,75};
+  //for (int xb=0;xb<30;xb++){testmearray[xb]=0;}
   //GUI_DispString(100, 30, (uint8_t*)"ABCD");
   GUI_SetColor(BROWN);
-  //GUI_DrawCircle((DISPLAY_X/2),(DISPLAY_Y/2),70);
-  //void GUI_FillRectArry(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey, uint8_t *arry)
-  //GUI_FillRectArry(1,1,230,219,(u8)*byte_ascii_fon);
-  GUI_FillRectArry(100,100,16,16,(u8)*testmearray);
-  //updateIcon();
-  //UI_DispLenString(20,20,(u8)*"string test",32);
+  //GUI_FillRectArry(100,100,16,16,(u8)*testmearray);
+
   
   #ifdef DEBUG
   printf("\n\r\n\r\n\rBooting\n\r");

@@ -2,9 +2,11 @@
 //#include "variants.h"
 #include "spi_ic.h"
 #include "boot_conf.h"
+
 /*************************** W25Qxx SPI ģʽ�ײ���ֲ�Ľӿ� ***************************/
-#define W25Qxx_SPI     _SPI1
+#define W25Qxx_SPI     SPI1
 #define W25Qxx_SPEED   0
+extern SPI_HandleTypeDef alt_spi;   
  
 //HAL_GPIO_WritePin(FLASH_nCS_GPIO_Port, FLASH_nCS_Pin, GPIO_PIN_SET);
 
@@ -23,16 +25,22 @@ void W25Qxx_SPI_CS_Set(uint8_t level)
 //��д����
 uint8_t W25Qxx_SPI_Read_Write_Byte(uint8_t data)
 {
-  return SPI_Read_Write(W25Qxx_SPI,data);
+
+  
+  return SPI_Read_Write(&alt_spi,data);
 }
 
 //��ʼ��
 void W25Qxx_Init(void)
 {
-  SPI_Config(W25Qxx_SPI);
+  //SPI_Config(W25Qxx_SPI);
+  //SPI_Protocol_Init(W25Qxx_SPI, W25Qxx_SPEED);
+  //W25Qxx_SPI_CS_Set(1);
 
-  SPI_Protocol_Init(W25Qxx_SPI, W25Qxx_SPEED);
+  alt_SPI_Init();
+  HAL_alt_SPI_MspInit(&alt_spi);
   W25Qxx_SPI_CS_Set(1);
+
 }
 /*************************************************************************************/
 

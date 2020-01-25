@@ -118,8 +118,8 @@ void updateIcon(void)
   GUI_Clear(BLACK);
   
   GUI_DispString(100, 5, (u8*)"Icon Updating...!");
-  while(1);
-/*
+  //while(1);
+
   if(bmpDecode(BMP_ROOT_DIR"/Logo.bmp", LOGO_ADDR))
   {
     LOGO_ReadDisplay();
@@ -137,7 +137,7 @@ void updateIcon(void)
     //  ICON_ReadDisplay(iconUpdateRect.x0, iconUpdateRect.y0, i);
     }
   }
-  */
+  
 }
 
 void updateFont(char *font, u32 addr)

@@ -137,7 +137,7 @@ if (res == FR_OK)
 #ifdef DEBUG		  
 	  printf("flash open ok\n\r");
 #endif
-   // while (1);
+
   }
 	if (res != FR_OK)
 	{
@@ -163,6 +163,7 @@ if (res == FR_OK)
 	uint32_t total=(uint32_t)mcuFirstPageAddr-0x8000000;
 	int size = f_size(&fil);
 	int prog=0;
+	GUI_DispString(80, 45, (uint8_t*)"Flashing System");
 	do {
 		readNextPage(buffer, &bufferLen);
 		if (HAL_OK != flashWrite(position, buffer, bufferLen))
@@ -173,10 +174,11 @@ if (res == FR_OK)
 		prog=((position-(uint32_t)mcuFirstPageAddr)*100/info.fsize);
 		#endif
 		#ifdef DEBUG	
-	//	printf("position %#010x\n\r",position);
-	//	printf("prog %d %d\n\r",prog, info.fsize);
+		printf("position %#010x\n\r",position);
+		printf("prog %d %d\n\r",prog, info.fsize);
 		#endif
 		#ifdef GFX_UI
+		
 		drawProgressbar(20,100, 300,20,prog);
 		speccy_border(prog);
 		#endif
@@ -185,7 +187,7 @@ if (res == FR_OK)
 	f_close(&fil);
 	HAL_FLASH_Lock();
 #ifdef DEBUG
-	 // printf("flash write complete \r\n");
+	  printf("flash write complete \r\n");
 #endif
 	return FR_OK;
 }

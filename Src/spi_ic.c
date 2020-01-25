@@ -1,6 +1,9 @@
 #include "spi_ic.h"
 #include "GPIO_Init.h"
 #include "boot_conf.h"
+#include "stm32f1xx_hal_spi.h" 
+SPI_HandleTypeDef alt_spi;   
+ 
 
 #ifndef SPI1_CS_PIN
   #define SPI1_CS_PIN  PA4
@@ -18,6 +21,7 @@ static SPI_TypeDef *spi[_SPI_CNT] = {
   SPI1,  //CS--PA4   SCK--PA5   MISO--PA6   MOSI--PA7
   SPI2,  //CS--PB12  SCK--PB13  MISO--PB14  MOSI--PB15
   SPI3}; //CS--PA15  SCK--PB3   MISO--PB4   MOSI--PB5
+//SPI_HandleTypeDef hspi1; 
 
 static const uint16_t spi_cs[_SPI_CNT] = {SPI1_CS_PIN, SPI2_CS_PIN, SPI3_CS_PIN};  //CS
 static const uint16_t spi_sck[_SPI_CNT]  = {PA5,  PB13, PB3};  //SCK
@@ -42,31 +46,84 @@ void SPI_GPIO_DeInit(uint8_t port)
   GPIO_InitSet(spi_cs[port], MGPIO_MODE_IPN, 0);  //CS
 }
 
-// Ӳ��SPIЭ���ʼ��
-// baudrate��ȡֵ��ΧΪ 0-7
-// ��������Ϊ 2^(baudrate+1) ��Ƶ��2-256��Ƶ
+//new function 
+
+void alt_SPI_Init(void)
+{
+  
+
+ alt_spi.Instance = SPI1;
+  alt_spi.Init.Mode = SPI_MODE_MASTER;
+  alt_spi.Init.Direction = SPI_DIRECTION_2LINES;
+  alt_spi.Init.DataSize = SPI_DATASIZE_8BIT;
+  alt_spi.Init.CLKPolarity = SPI_POLARITY_HIGH;
+  alt_spi.Init.CLKPhase = SPI_PHASE_2EDGE;
+  alt_spi.Init.NSS = SPI_NSS_SOFT;
+  alt_spi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  alt_spi.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  alt_spi.Init.TIMode = SPI_TIMODE_DISABLE;
+  alt_spi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  alt_spi.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&alt_spi) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+void HAL_alt_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
+{
+
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(spiHandle->Instance==SPI1)
+  {
+  
+    /* SPI1 clock enable */
+    __HAL_RCC_SPI1_CLK_ENABLE();
+  
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    /**SPI1 GPIO Configuration    
+    PA5     ------> SPI1_SCK
+    PA6     ------> SPI1_MISO
+    PA7     ------> SPI1_MOSI 
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_7;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_6;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+ 
+  }
+}
+
 void SPI_Protocol_Init(uint8_t port, uint8_t baudrate)
 {
   SPI_InitTypeDef SPI_InitStructure;
  
   
-  SPI_I2S_DeInit(spi[port]);  //reset SPI clock
-  /*
+ // SPI_I2S_DeInit(spi[port]);  //reset SPI clock
+  //RCC_APB2PeriphResetCmd(RCC_APB2Periph_SPI1, ENABLE);
   switch(port)
   {
-    case _SPI1: RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE); break;
-    case _SPI2: RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,ENABLE); break;
-    case _SPI3: RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3,ENABLE); break;
+   
+  //  case _SPI1: RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE); break;
+    //case _SPI2: RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,ENABLE); break;
+   // case _SPI3: RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3,ENABLE); break;
     default: break;
   }
-*/
+return ;
 switch(port)
 {
   case _SPI1 : __HAL_RCC_SPI1_CLK_ENABLE();break;
   case _SPI2 : __HAL_RCC_SPI1_CLK_ENABLE();break;
   case _SPI3 : __HAL_RCC_SPI1_CLK_ENABLE();break;
+  default:break;
 }
-
+  //SPI_InitStructure.Instance = SPI1;
   SPI_InitStructure.BaudRatePrescaler = baudrate<<3;
   //SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;
   SPI_InitStructure.CLKPolarity = SPI_POLARITY_LOW;
@@ -78,15 +135,16 @@ switch(port)
   SPI_InitStructure.FirstBit =SPI_FIRSTBIT_MSB;
   SPI_InitStructure.Mode = SPI_MODE_MASTER;
   SPI_InitStructure.NSS = SPI_NSS_SOFT;
-  SPI_Init(spi[port], &SPI_InitStructure);
+  HAL_SPI_Init(&SPI_InitStructure);
+ // SPI_Init(spi[port], &SPI_InitStructure);
   
-  SPI_Cmd(spi[port],ENABLE);
+ // SPI_Cmd(spi[port],ENABLE);
 }
 
 void SPI_Config(uint8_t port)
 {
-  SPI_GPIO_Init(port);
-  SPI_Protocol_Init(port, 1);
+ // SPI_GPIO_Init(port);
+ // SPI_Protocol_Init(port, 1);
 }
 
 void SPI_DeConfig(uint8_t port)
@@ -95,20 +153,24 @@ void SPI_DeConfig(uint8_t port)
   SPI_I2S_DeInit(spi[port]);
 }
 
-uint16_t SPI_Read_Write(uint8_t port, uint16_t d)
+
+uint16_t SPI_Read_Write(SPI_HandleTypeDef *spiHandle, uint16_t d)
 {
-  //__HAL_SPI_GET_FLAG(__HANDLE__, __FLAG__)
-//  while(__HAL_SPI_GET_FLAG(spi[port], SPI_FLAG_TXE) == RESET);
- // SPI_I2S_SendData(spi[port], d);
- // while(__HAL_SPI_GET_FLAG(spi[port], SPI_FLAG_RXNE) == RESET);
- //HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout);
- HAL_SPI_Transmit(spi[port],d,sizeof(d),1);
- while(1);
-  return HAL_SPI_Transmit(spi[port],d,sizeof(d),1);
- 
+  int Dummy = 0xFF;
+	int Data = 0;
+ //if ((HAL_SPI_GetState(&alt_spi) != HAL_SPI_STATE_READY))
+ //{
+   //return 0xff;
+ //};
+ 	while ((HAL_SPI_GetState(&alt_spi) != HAL_SPI_STATE_READY));
+HAL_SPI_TransmitReceive(&alt_spi, &d, &Data, 1, 5000);
+printf("data  %#010x\n\r",Data);
+  return Data;
 }
+
 
 void SPI_CS_Set(uint8_t port, uint8_t level)
 {
   GPIO_SetLevel(spi_cs[port], level);
 }
+

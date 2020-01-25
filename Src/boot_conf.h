@@ -58,8 +58,8 @@
 #define LCD_HEIGHT	DISPLAY_Y
 
 #define BYTE_HEIGHT 16
-//#define BYTE_WIDTH  (BYTE_HEIGHT/2)
-#define BYTE_WIDTH 8
+#define BYTE_WIDTH  (BYTE_HEIGHT/2)
+//#define BYTE_WIDTH 8
   
 #define ICON_WIDTH  70
 #define ICON_HEIGHT 70

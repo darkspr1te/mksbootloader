@@ -37,7 +37,7 @@ extern SPI_HandleTypeDef hspi1;
 /* USER CODE END Private defines */
 
 void MX_SPI1_Init(void);
-
+void MX_SPI1_Init_alt(void);
 /* USER CODE BEGIN Prototypes */
 
 /* USER CODE END Prototypes */

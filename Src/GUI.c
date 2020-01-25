@@ -2,7 +2,7 @@
 #include "boot_conf.h"
 #include "lcd.h"
 #include "LCD_Init.h"
-
+#include "w25qxx.h"
 uint16_t foreGroundColor = FK_COLOR;
 uint16_t backGroundColor = BK_COLOR;
 GUI_TEXT_MODE guiTextMode = GUI_TEXTMODE_NORMAL;
@@ -535,7 +535,7 @@ CHAR_INFO GUI_DispOne(int16_t sx, int16_t sy, const uint8_t *p)
   uint8_t  font[bitMapSize];
   uint32_t temp = 0;
 //segfault 
- // W25Qxx_ReadBuffer(font, info.bitMapAddr, bitMapSize);
+  W25Qxx_ReadBuffer(font, info.bitMapAddr, bitMapSize);
 
   for(x=0; x < info.pixelWidth; x++)
   {           
@@ -569,7 +569,7 @@ void GUI_DispString(int16_t x, int16_t y, const uint8_t *p)
   while(*p)
   {   
     info = GUI_DispOne(x, y, p);
-     printf(" test out %s\n\r",*p);
+     printf(" test out %c\n\r",*p);
     x += info.pixelWidth;
     p += info.bytes;
   }
