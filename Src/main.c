@@ -80,7 +80,7 @@ inline void moveVectorTable(uint32_t Offset)
   * @brief  The application entry point.
   * @retval int
   */
-#include "inline_font.h"
+//#include "inline_font.h"
 #define teststr "TEST"
 int main(void)
 {
@@ -89,7 +89,7 @@ int main(void)
   SystemClock_Config();
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  //LCD_Init_GPIO();
+
   MX_TIM2_Init();
   MX_FATFS_Init();
   MX_SPI1_Init();
@@ -97,36 +97,28 @@ int main(void)
   /* Initialize interrupts */
   MX_NVIC_Init();
   MX_FATFS_Init();
-  //ErrorBeep(1);
+  
   /* Start System - start output*/
   #ifdef GFX_UI
   LCD_Init();
   LCD_RefreshDirection(1);
-
   W25Qxx_Init();
-
   GUI_Clear(BLACK);
-  GUI_SetColor(GBLUE);
+  GUI_SetColor(GREEN);
   GUI_DispString(110, 30, (uint8_t*)"Booting");
   #endif
-  //while(1);
-  //GUI_DrawRect(10,10,(320-10),(240-10));
+
   GUI_SetColor(WHITE);
   GUI_SetBkColor(BLACK);
-  //int testmearray[30]={65,66,67,68,69,70,71,72,73,74,75};
-  //for (int xb=0;xb<30;xb++){testmearray[xb]=0;}
-  //GUI_DispString(100, 30, (uint8_t*)"ABCD");
   GUI_SetColor(BROWN);
-  //GUI_FillRectArry(100,100,16,16,(u8)*testmearray);
 
-  
   #ifdef DEBUG
   printf("\n\r\n\r\n\rBooting\n\r");
   printf("Software version: %s\r\n",SOFTWARE_VERSION);
   printf("Board Build: \"%s\"\r\n",HARDWARE);
   printf("Build epoch %d\n\r",LAST_BUILD_TIME);
   #endif
-//while(1);
+
   ErrorBeep(1);
   #ifdef DEBUG
   printf("Mounting Filesystem...\n\r");
@@ -142,19 +134,17 @@ int main(void)
     #ifdef DEBUG
 	  printf("SD Card Open Success\r\n");
     #endif
-  } else {
+  } else 
+  {
     #ifdef DEBUG
 	  printf("FatFs Init Failed Code: %d\r\n", (int)result);
     printf("is sd-card present ?");
-    //ErrorBeep(1);
     #endif
   }
 
   //Now we look for sdcard file and if found we write it to flash
   if (FR_OK == f_mount(&sdFileSystem, SPISD_Path, 1) && FR_OK == flash(FIRMWARE))
   {
-
-     // int ress = f_rename(FIRMWARE,RENAME_FILE);
      #ifdef DEBUG
      #ifndef DONT_RENAME
       if (FR_OK !=f_rename(FIRMWARE,RENAME_FILE))
@@ -171,7 +161,7 @@ int main(void)
       #endif
       #endif
       //We flashed a new firmware app now lets jump to it's vectors at addres stored in MAIN_PR_OFFSET(boot_conf.h)
-      //Beep 3 for yeah we flashed ok 
+      //Beep 3 for we flashed ok 
       ErrorBeep(3);
       Jump_To_App();
   }
@@ -312,14 +302,15 @@ void ShortBeep()
 
 static void ErrorBeep(int count)
 {
-for (int i=0;i<count;i++)
-{
-	HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_3);
-	HAL_Delay(30);
-	HAL_TIM_OC_Stop_IT(&htim2, TIM_CHANNEL_3);
-  HAL_Delay(150);
-      
+  //blocking, need to add non-blocking 
+  for (int i=0;i<count;i++)
+  {
+	  HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_3);
+	  HAL_Delay(30);
+	  HAL_TIM_OC_Stop_IT(&htim2, TIM_CHANNEL_3);
+    HAL_Delay(150);
   }
+
 }
 
 /**

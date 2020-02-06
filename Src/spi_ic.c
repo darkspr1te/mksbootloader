@@ -21,7 +21,6 @@ static SPI_TypeDef *spi[_SPI_CNT] = {
   SPI1,  //CS--PA4   SCK--PA5   MISO--PA6   MOSI--PA7
   SPI2,  //CS--PB12  SCK--PB13  MISO--PB14  MOSI--PB15
   SPI3}; //CS--PA15  SCK--PB3   MISO--PB4   MOSI--PB5
-//SPI_HandleTypeDef hspi1; 
 
 static const uint16_t spi_cs[_SPI_CNT] = {SPI1_CS_PIN, SPI2_CS_PIN, SPI3_CS_PIN};  //CS
 static const uint16_t spi_sck[_SPI_CNT]  = {PA5,  PB13, PB3};  //SCK
@@ -52,7 +51,7 @@ void alt_SPI_Init(void)
 {
   
 
- alt_spi.Instance = SPI1;
+  alt_spi.Instance = SPI1;
   alt_spi.Init.Mode = SPI_MODE_MASTER;
   alt_spi.Init.Direction = SPI_DIRECTION_2LINES;
   alt_spi.Init.DataSize = SPI_DATASIZE_8BIT;
@@ -164,7 +163,9 @@ uint16_t SPI_Read_Write(SPI_HandleTypeDef *spiHandle, uint16_t d)
  //};
  	while ((HAL_SPI_GetState(&alt_spi) != HAL_SPI_STATE_READY));
 HAL_SPI_TransmitReceive(&alt_spi, &d, &Data, 1, 5000);
-printf("data  %#010x\n\r",Data);
+#ifdef DEBUG
+    printf("data  %#010x\n\r",Data);
+#endif
   return Data;
 }
 

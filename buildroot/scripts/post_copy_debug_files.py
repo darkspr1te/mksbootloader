@@ -8,4 +8,4 @@ def after_build(source, target, env):
     shutil.copyfile(source_filename, dst_filename)
     
 env.AddPostAction("buildprog", after_build)
-print(env)
+#print(env)
