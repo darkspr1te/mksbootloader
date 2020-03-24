@@ -103,17 +103,7 @@ void SPI_Protocol_Init(uint8_t port, uint8_t baudrate)
 {
   SPI_InitTypeDef SPI_InitStructure;
  
-  
- // SPI_I2S_DeInit(spi[port]);  //reset SPI clock
-  //RCC_APB2PeriphResetCmd(RCC_APB2Periph_SPI1, ENABLE);
-  switch(port)
-  {
-   
-  //  case _SPI1: RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1,ENABLE); break;
-    //case _SPI2: RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,ENABLE); break;
-   // case _SPI3: RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI3,ENABLE); break;
-    default: break;
-  }
+
 return ;
 switch(port)
 {
@@ -157,14 +147,11 @@ uint16_t SPI_Read_Write(SPI_HandleTypeDef *spiHandle, uint16_t d)
 {
   int Dummy = 0xFF;
 	int Data = 0;
- //if ((HAL_SPI_GetState(&alt_spi) != HAL_SPI_STATE_READY))
- //{
-   //return 0xff;
- //};
  	while ((HAL_SPI_GetState(&alt_spi) != HAL_SPI_STATE_READY));
-HAL_SPI_TransmitReceive(&alt_spi, &d, &Data, 1, 5000);
+  HAL_SPI_TransmitReceive(&alt_spi, &d, &Data, 1, 5000);
 #ifdef DEBUG
-    printf("data  %#010x\n\r",Data);
+  //Heavy debug disable by default 
+  //printf("data  %#010x\n\r",Data);
 #endif
   return Data;
 }

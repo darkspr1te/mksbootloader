@@ -120,7 +120,13 @@
                is no need to call the 2 first functions listed above, since SystemCoreClock
                variable is updated automatically.
   */
+
+#ifdef MKS_32_V1_4
+uint32_t SystemCoreClock = 72000000;
+#else
 uint32_t SystemCoreClock = 16000000;
+#endif
+
 const uint8_t AHBPrescTable[16U] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 const uint8_t APBPrescTable[8U] =  {0, 0, 0, 0, 1, 2, 3, 4};
 

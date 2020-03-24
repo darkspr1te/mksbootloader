@@ -1,0 +1,1 @@
+[2020-02-06 20:46:Program Success:34FFDA055042353355480343 C:\Users\darkspr1te\Documents\PlatformIO\New Stm32 projects\tftbootloader-bloated\mksbootloader\.pio\build\mkstft_28_bl\firmware.hex

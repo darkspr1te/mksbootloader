@@ -54,8 +54,8 @@
 #define DISPLAY_Y 				240
 #define DISPLAY_X				320
 #define ROTATION				1
-#define LCD_WIDTH	  DISPLAY_X
-#define LCD_HEIGHT	DISPLAY_Y
+//#define LCD_WIDTH	  DISPLAY_X
+//#define LCD_HEIGHT	DISPLAY_Y
 
 #define BYTE_HEIGHT 16
 #define BYTE_WIDTH  (BYTE_HEIGHT/2)

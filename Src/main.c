@@ -1,19 +1,14 @@
-/* USER CODE BEGIN Header */
+
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body
+  * @brief          :Boot loader for the following displays 
+  *                      MKS TFT 28/32" STM32f107vc displays for Marlin + ramps board with AUX-1 connector
+  *                       MKSTFT 24" STM32F105 based 
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
+ 
   ******************************************************************************
   */
 
@@ -81,7 +76,7 @@ inline void moveVectorTable(uint32_t Offset)
   * @retval int
   */
 //#include "inline_font.h"
-#define teststr "TEST"
+
 int main(void)
 {
  
@@ -99,19 +94,8 @@ int main(void)
   MX_FATFS_Init();
   
   /* Start System - start output*/
-  #ifdef GFX_UI
-  LCD_Init();
-  LCD_RefreshDirection(1);
-  W25Qxx_Init();
-  GUI_Clear(BLACK);
-  GUI_SetColor(GREEN);
-  GUI_DispString(110, 30, (uint8_t*)"Booting");
-  #endif
-
-  GUI_SetColor(WHITE);
-  GUI_SetBkColor(BLACK);
-  GUI_SetColor(BROWN);
-
+  
+ 
   #ifdef DEBUG
   printf("\n\r\n\r\n\rBooting\n\r");
   printf("Software version: %s\r\n",SOFTWARE_VERSION);
@@ -128,6 +112,15 @@ int main(void)
 
   unsigned char result;
   result = f_mount(&sdFileSystem, SPISD_Path, 1);
+  #ifdef GFX_UI
+  LCD_Init();
+  LCD_RefreshDirection(1);
+  W25Qxx_Init();
+  GUI_Clear(BLACK);
+  GUI_SetColor(GREEN);
+  GUI_DispString(110, 30, (uint8_t*)"Booting");
+  
+  #endif
 
   if (result == FR_OK)
   {
@@ -141,7 +134,7 @@ int main(void)
     printf("is sd-card present ?");
     #endif
   }
-
+//scanUpdates();
   //Now we look for sdcard file and if found we write it to flash
   if (FR_OK == f_mount(&sdFileSystem, SPISD_Path, 1) && FR_OK == flash(FIRMWARE))
   {

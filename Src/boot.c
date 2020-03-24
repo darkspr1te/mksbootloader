@@ -1,6 +1,7 @@
 #include "boot.h"
 //#include "includes.h"
 #include "boot_conf.h"
+#include "my_misc.h"
 #include "GUI.h"
 
 
@@ -185,16 +186,17 @@ void scanResetDir(void)
   {
     f_close(&resetfile);
     f_rename(TFT_RESET_FILE, TFT_RESET_FILE ".DONE");
-    infoSettingsReset();
-    TSC_Calibration();
-    storePara();
+    //infoSettingsReset();
+    //TSC_Calibration();
+    //storePara();
   }
 }
 
 void scanUpdates(void)
 {
   volatile u8 result = 0;   //must volatileï¼
-  if(mountSDCard())
+  //if(mountSDCard())
+  if(f_mount(&sdFileSystem, SPISD_Path, 1))
   {
     result = scanUpdateFile();
 

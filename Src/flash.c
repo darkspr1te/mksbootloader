@@ -27,9 +27,10 @@ HAL_StatusTypeDef erase(uint32_t from, uint32_t to)
 
 		uint32_t error = 0;
 		res = HAL_FLASHEx_Erase(&erase, &error);
-#ifdef DEBUG		
-		printf("erase page %#010x\n\r",i);
-#endif
+		#ifdef DEBUG
+		//Heavy debug disabled by default 		
+		//printf("erase page %#010x\n\r",i);
+		#endif
 		if (res != HAL_OK) {
 			return res;
 		}
@@ -61,7 +62,8 @@ FRESULT readNextPage(uint8_t *target, uint32_t *read)
 
 HAL_StatusTypeDef flashWrite(uint32_t position, uint8_t *data, uint32_t size)
 {
-	#ifdef DEBUG	
+	#ifdef DEBUG
+	//Heavy debug disabled by default 	
 	//printf("write page %#010x\n\r",position);
 	#endif
 	HAL_StatusTypeDef res = HAL_OK;
@@ -74,6 +76,7 @@ HAL_StatusTypeDef flashWrite(uint32_t position, uint8_t *data, uint32_t size)
 	}
 	return res;
 }
+// Colours 
 void speccy_border(int progress)
 {
 	//totally for fun, reminder of the ole' days 
@@ -106,7 +109,7 @@ void drawProgressbar(int x,int y, int width,int height, int progress)
    GUI_SetRange(0,0,320-1,240-1);
    colour_a = (colour_a-(colour_b*progress));
    float bar = ((float)(width-1) / 100) * progress;
-   GUI_SetColor(GBLUE);
+   GUI_SetColor(RED);
    GUI_DrawRect(x, y, width , (y+height));
 	if (bar<width-gap)
    		GUI_FillRectColor(x+gap,y+gap,bar,(y+height)-gap,colour_a);
@@ -115,6 +118,7 @@ void drawProgressbar(int x,int y, int width,int height, int progress)
 	
 
   #ifdef DEBUG
+ //Heavy debug disabled by default 
  // printf("progress bar after calc %d\n\r",progress);
   #endif
  
@@ -174,8 +178,8 @@ if (res == FR_OK)
 		prog=((position-(uint32_t)mcuFirstPageAddr)*100/info.fsize);
 		#endif
 		#ifdef DEBUG	
-		printf("position %#010x\n\r",position);
-		printf("prog %d %d\n\r",prog, info.fsize);
+		printf("address %#010x ",position);
+		printf("Percent  %d  \n\r",prog);
 		#endif
 		#ifdef GFX_UI
 		
