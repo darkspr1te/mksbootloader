@@ -520,6 +520,45 @@ void  GUI_FillCircle(uint16_t x0, uint16_t y0, uint16_t r)
 
 //
 CHAR_INFO GUI_DispOne(int16_t sx, int16_t sy, const uint8_t *p)
+{
+  CHAR_INFO info = {.bytes = 0};
+
+  if(p == NULL || *p == 0) return info;
+
+  getCharacterInfo(p, &info);
+
+  uint8_t x = 0,
+          y = 0,
+          j = 0,
+          i = 0;
+  uint16_t bitMapSize = (info.pixelHeight * info.pixelWidth / 8);
+  uint8_t  font[bitMapSize];
+  uint32_t temp = 0;
+
+  W25Qxx_ReadBuffer(font, info.bitMapAddr, bitMapSize);
+
+  for(x=0; x < info.pixelWidth; x++)
+  {
+    for(j=0; j < (info.pixelHeight + 8-1)/8; j++)
+    {
+      temp <<= 8;
+      temp |= font[i++];
+    }
+
+    for(y=0;y < info.pixelHeight;y++)
+    {
+      if(temp & (1<<(info.pixelHeight-1)))
+        GUI_DrawPixel(sx, sy+y, foreGroundColor);
+      else if(guiTextMode == GUI_TEXTMODE_NORMAL)
+        GUI_DrawPixel(sx, sy+y, backGroundColor);
+      temp <<= 1;
+    }
+    sx++;
+  }
+  return info;
+}
+/*
+CHAR_INFO GUI_DispOne(int16_t sx, int16_t sy, const uint8_t *p)
 {  
   CHAR_INFO info = {.bytes = 0};
   
@@ -560,7 +599,7 @@ CHAR_INFO GUI_DispOne(int16_t sx, int16_t sy, const uint8_t *p)
   }
   return info;  
 }
-
+*/
 void GUI_DispString(int16_t x, int16_t y, const uint8_t *p)
 {
   CHAR_INFO info;

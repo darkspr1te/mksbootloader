@@ -11,7 +11,8 @@
 //#include "inline_font.h"
 
 #define MKS_TFT
-#define aCount(n) (sizeof(n)/sizeof(n[0]))
+//#define aCount(n) (sizeof(n)/sizeof(n[0]))
+#define COUNT(n) (sizeof(n)/sizeof(n[0]))
 #if defined(STM32F107xC) && defined(MKS_TFT)
 
 /**
