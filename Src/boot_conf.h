@@ -102,8 +102,8 @@
 #define LCD_nWR_GPIO_Port       GPIOD
 #define LCD_RS_Pin              GPIO_PIN_12
 #define LCD_RS_GPIO_Port        GPIOD
-#define LCD_BACKLIGHT_Pin       GPIO_PIN_14
-#define LCD_BACKLIGHT_GPIO_Port GPIOD
+#define LCD_BACKLIGHT_Pin       GPIO_PIN_1
+#define LCD_BACKLIGHT_GPIO_Port GPIOA
 #define LCD_nRD_Pin             GPIO_PIN_4
 #define LCD_nRD_GPIO_Port       GPIOD
 #define LCD_nCS_Pin             GPIO_PIN_7

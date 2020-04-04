@@ -7,9 +7,9 @@ env.AddPostAction(
     "$BUILD_DIR/${PROGNAME}.elf",
     env.VerboseAction(" ".join([
         "$OBJCOPY", "-O", "ihex", "-R", ".eeprom",
-        "\"$BUILD_DIR\${PROGNAME}.elf\"", "\"$PROJECT_DIR/buildroot/SDCARD/${PROGNAME}.hex\""
+        "\"$BUILD_DIR\${PROGNAME}.elf\"", "\"$PROJECT_DIR/buildroot/BOOTLOADER/${PROGNAME}.hex\""
     ]), "Building $BUILD_DIR\${PROGNAME}.hex")
 )
-
+#print(env)
 
       
