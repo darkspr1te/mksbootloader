@@ -32,11 +32,6 @@
 #define FONT_ROOT_DIR "0:"ROOT_DIR"/font"
 #define TFT_RESET_FILE "0:reset.txt"
 
-//const GUI_RECT iconUpdateRect = {(LCD_WIDTH - ICON_WIDTH)/2, (LCD_HEIGHT - ICON_HEIGHT)/2,(LCD_WIDTH - ICON_WIDTH)/2 + ICON_WIDTH, (LCD_HEIGHT - ICON_HEIGHT)/2 + ICON_HEIGHT};
-
-//const GUI_RECT labelUpdateRect = {0,        (LCD_HEIGHT - ICON_HEIGHT)/2 + ICON_HEIGHT, 
-  //                               LCD_WIDTH, (LCD_HEIGHT - ICON_HEIGHT)/2 + ICON_HEIGHT + BYTE_HEIGHT};
-
 enum
 {
   ICON_HEAT = 0,

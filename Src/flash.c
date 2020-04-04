@@ -1,11 +1,25 @@
+//#include "stm32f1xx_hal.h"
+
+#if defined(STM32F107xC)
 #include "stm32f1xx_hal.h"
+
+#elif  defined(STM32F407xx)
+#include "stm32f4xx_hal.h"
+
+#endif
+
 #include "boot_conf.h"
 
 extern unsigned int _isr_real;
 const uint32_t *mcuFirstPageAddr = (const uint32_t *) (0x8000000 + MAIN_PR_OFFSET);
 
 // uint32_t mcuLastPageAddr = ((uint32_t) &_isr_real) - FLASH_PAGE_SIZE;
+#ifndef FLASH_PAGE_SIZE
+#define FLASH_PAGE_SIZE 1000
+#define FLASH_TYPEERASE_PAGES 1
+//FLASH_TYPEERASE_SECTORS
 
+#endif
 uint8_t buffer[FLASH_PAGE_SIZE];
 uint32_t bufferLen = 0;
 
@@ -19,12 +33,13 @@ HAL_StatusTypeDef erase(uint32_t from, uint32_t to)
 	for (uint32_t i = from; i <= to; i += FLASH_PAGE_SIZE)
 	{
 		FLASH_EraseInitTypeDef erase;
-
+#if defined(STM32F107xC)
 		erase.TypeErase = FLASH_TYPEERASE_PAGES;
 		erase.Banks = FLASH_BANK_1;
 		erase.PageAddress = i;
 		erase.NbPages = 1;
-
+#elif  defined(STM32F407xx)
+#endif
 		uint32_t error = 0;
 		res = HAL_FLASHEx_Erase(&erase, &error);
 		#ifdef DEBUG

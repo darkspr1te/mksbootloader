@@ -1,7 +1,16 @@
 #include "spi_ic.h"
 #include "GPIO_Init.h"
 #include "boot_conf.h"
-#include "stm32f1xx_hal_spi.h" 
+//#include "stm32f1xx_hal_spi.h" 
+
+#if defined(STM32F107xC)
+
+#include "stm32f1xx_hal_spi.h"
+#elif  defined(STM32F407xx)
+
+#include "stm32f4xx_hal_spi.h"
+#endif
+
 SPI_HandleTypeDef alt_spi;   
  
 

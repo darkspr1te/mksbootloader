@@ -28,8 +28,17 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+//#include "stm32f1xx_hal.h"
+
+#if defined(STM32F107xC)
 #include "stm32f1xx_hal.h"
-#define SOFTWARE_VERSION "1.0"
+
+#elif  defined(STM32F407xx)
+#include "stm32f4xx_hal.h"
+
+#endif
+
+#define SOFTWARE_VERSION "1.1"
 
 
 

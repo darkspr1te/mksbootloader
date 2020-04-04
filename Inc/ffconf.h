@@ -24,7 +24,16 @@
 / Additional user header to be used  
 /-----------------------------------------------------------------------------*/
 #include "main.h"
+//#include "stm32f1xx_hal.h"
+
+#if defined(STM32F107xC)
 #include "stm32f1xx_hal.h"
+
+#elif  defined(STM32F407xx)
+#include "stm32f4xx_hal.h"
+
+#endif
+
 
 /*-----------------------------------------------------------------------------/
 / Functions and Buffer Configurations

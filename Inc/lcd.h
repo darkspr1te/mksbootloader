@@ -26,15 +26,38 @@
  #define LCD_nCS_Pin             GPIO_PIN_8
  #define LCD_nCS_GPIO_Port       GPIOC
  */
-  #define	LCD_CS_SET  GPIOC->BSRR=1<<8    //片选端口    PB9
-  #define	LCD_RS_SET	GPIOD->BSRR=1<<13    //数据/命令 	PB8	   
-  #define	LCD_WR_SET	GPIOB->BSRR=1<<14    //写数据			PB7
-  #define	LCD_RD_SET	GPIOD->BSRR=1<<15    //读数据			PB6
-                      
-  #define	LCD_CS_CLR  GPIOC->BRR=1<<8     //片选端口  	PB9
-  #define	LCD_RS_CLR	GPIOD->BRR=1<<13     //数据/命令		PB8	   
-  #define	LCD_WR_CLR	GPIOB->BRR=1<<14     //写数据			PB7
-  #define	LCD_RD_CLR	GPIOD->BRR=1<<15     //读数据			PB6   
+  #define	LCD_CS_SET  GPIOC->BSRR=1<<8   
+  #define	LCD_RS_SET	GPIOD->BSRR=1<<13      
+  #define	LCD_WR_SET	GPIOB->BSRR=1<<14   
+  #define	LCD_RD_SET	GPIOD->BSRR=1<<15   
+
+#if defined(STM32F107xC)
+  #define	LCD_CS_CLR  GPIOC->BRR=1<<8    
+  #define	LCD_RS_CLR	GPIOD->BRR=1<<13      
+  #define	LCD_WR_CLR	GPIOB->BRR=1<<14   
+  #define	LCD_RD_CLR	GPIOD->BRR=1<<15     
+
+#elif  defined(STM32F407xx)
+ #define	LCD_CS_CLR  GPIOD->BSRR=0<<7
+  #define	LCD_RS_CLR	GPIOD->BSRR=0<<12      
+  #define	LCD_WR_CLR	GPIOD->BSRR=0<<5   
+  #define	LCD_RD_CLR	GPIOD->BSRR=1<<4    
+  /*
+  
+typedef struct
+{
+  __IO uint32_t MODER;    /*!< GPIO port mode register,               Address offset: 0x00      
+  __IO uint32_t OTYPER;   /*!< GPIO port output type register,        Address offset: 0x04     
+  __IO uint32_t OSPEEDR;  /*!< GPIO port output speed register,       Address offset: 0x08      
+  __IO uint32_t PUPDR;    /*!< GPIO port pull-up/pull-down register,  Address offset: 0x0C      
+  __IO uint32_t IDR;      /*!< GPIO port input data register,         Address offset: 0x10      
+  __IO uint32_t ODR;      /*!< GPIO port output data register,        Address offset: 0x14      
+  __IO uint32_t BSRR;     /*!< GPIO port bit set/reset register,      Address offset: 0x18      
+  __IO uint32_t LCKR;     /*!< GPIO port configuration lock register, Address offset: 0x1C      
+  __IO uint32_t AFR[2];   /*!< GPIO alternate function registers,     Address offset: 0x20-0x24 
+} GPIO_TypeDef;
+*/
+#endif 
 
   //PB0~15,作为数据线
   #define DATAOUT(x) do{GPIOE->ODR = x;}while(0) //数据输出

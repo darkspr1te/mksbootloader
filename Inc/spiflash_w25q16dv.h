@@ -31,7 +31,17 @@
 #define __SPIFLASH_W25Q16DV_H
 
 #include "ff_gen_drv.h"
+//#include "stm32f1xx_hal.h"
+
+#if defined(STM32F107xC)
 #include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_spi.h"
+#elif  defined(STM32F407xx)
+#include "stm32f4xx_hal.h"
+#include "stm32_hal_legacy.h"
+#include "stm32f4xx_hal_spi.h"
+#endif
+
 //#include "cmsis_os.h"
 
 #define WFLASH_PAGE_SIZE	0x100	// 256b

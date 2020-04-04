@@ -23,13 +23,17 @@ void GPIO_InitSet(uint16_t io, GPIO_MODE mode, uint8_t AF)
   
   if(pin <= 7)
   {
+    #if defined(STM32F107xC)
     GPIO_Port[port]->CRL &= ~(0xF << 4*(pin & 0x7));  //clear control reg bits
     GPIO_Port[port]->CRL |= mode << 4*(pin & 0x7);  //clear control reg bits
+    #endif
   }
   else
   {
+    #if defined(STM32F107xC)
     GPIO_Port[port]->CRH &= ~(0xF << 4*(pin & 0x7));  //clear control reg bits
     GPIO_Port[port]->CRH |= mode << 4*(pin & 0x7);  //clear control reg bits  
+    #endif
   }
 }
 

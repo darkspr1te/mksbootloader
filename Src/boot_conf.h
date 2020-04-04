@@ -2,9 +2,15 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __BOOT_CONF_H
 #define __BOOT_CONF_H
-
+#if defined(STM32F107xC)
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_spi.h"
+#elif  defined(STM32F407xx)
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_spi.h"
+#endif
+
+
 #include "fatfs.h"
 #include "lcd.h"
 #include "boot.h"
@@ -78,7 +84,73 @@
 
 //GFX_UI enables lcd screen and progress bar during flash 
 #define GFX_UI
+#elif defined(STM32F407xx) && defined(MKS_TFT)
 
+//SD Card pins
+#define SDCARD_nCS_Pin          GPIO_PIN_11
+#define SDCARD_nCS_GPIO_Port    GPIOC
+#define SDCARD_DETECT_Pin       GPIO_PIN_3
+#define SDCARD_DETECT_GPIO_Port GPIOD
+
+//
+//flash pins TP_MOSI PA7, TP_MISO PA6, TP_SCK PA5 , F_CS PB9 aka SPI default 
+#define FLASH_nCS_Pin           GPIO_PIN_9
+#define FLASH_nCS_GPIO_Port     GPIOB
+
+//LCD Stuff
+#define LCD_nWR_Pin             GPIO_PIN_5
+#define LCD_nWR_GPIO_Port       GPIOD
+#define LCD_RS_Pin              GPIO_PIN_12
+#define LCD_RS_GPIO_Port        GPIOD
+#define LCD_BACKLIGHT_Pin       GPIO_PIN_14
+#define LCD_BACKLIGHT_GPIO_Port GPIOD
+#define LCD_nRD_Pin             GPIO_PIN_4
+#define LCD_nRD_GPIO_Port       GPIOD
+#define LCD_nCS_Pin             GPIO_PIN_7
+#define LCD_nCS_GPIO_Port       GPIOD
+//touch 
+#define TOUCH_DI_Pin            GPIO_PIN_5
+#define TOUCH_DI_GPIO_Port      GPIOC
+#define TOUCH_nCS_Pin           GPIO_PIN_4
+#define TOUCH_nCS_GPIO_Port     GPIOC
+
+//other
+#define FILAMENT_DI_Pin         GPIO_PIN_0
+#define FILAMENT_DI_GPIO_Port   GPIOB
+#define POWER_DI_Pin            GPIO_PIN_1
+#define POWER_DI_GPIO_Port      GPIOB
+
+#define FIRMWARE_FILENAME       "mks35v1.bin"
+//Vector address to load firmware and boot 
+#define MAIN_PR_OFFSET 0xC000
+//printed via UART1 during debug builds
+#define HARDWARE                "MKS TFT 3.5 V1.0 Board"  
+#define DISPLAY_Y 				240//needs updating
+#define DISPLAY_X				320//needs updating 
+#define ROTATION				1
+//#define LCD_WIDTH	  DISPLAY_X
+//#define LCD_HEIGHT	DISPLAY_Y
+
+#define BYTE_HEIGHT 16
+#define BYTE_WIDTH  (BYTE_HEIGHT/2)
+//#define BYTE_WIDTH 8
+  
+#define ICON_WIDTH  70
+#define ICON_HEIGHT 70
+#define TITLE_END_Y 40
+  
+#define LIST_ICON_WIDTH   55
+#define LIST_ICON_HEIGHT  50
+  
+#define selecticonw 70
+//Not used yet, wiil be required for eeprom update 
+#define ROOT_DIR			"MKS"
+#define SPI1_CS_PIN PB9
+#include "spiflash_w25q16dv.h"
+
+
+//GFX_UI enables lcd screen and progress bar during flash 
+#define GFX_UI
 #endif
 
 /**

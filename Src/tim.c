@@ -19,7 +19,10 @@ void MX_TIM2_Init(void)
   //htim2.Init.Period = 14399;
   htim2.Init.Period = 24500;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  #if defined(STM32F107xC)
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  #elif  defined(STM32F407xx)
+  #endif
   if (HAL_TIM_OC_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
